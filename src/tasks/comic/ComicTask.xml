@@ -1,0 +1,7 @@
+<component name="ComicTask" extends="Task">
+  <interface>
+    <field id="response" type="roSGNode" />
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/tasks/comic/ComicTask.bs" />
+</component>

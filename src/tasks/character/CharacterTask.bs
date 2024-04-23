@@ -1,0 +1,26 @@
+sub init()
+    m.top.functionName = "fetchCharacters"
+    m.top.observeField("comicId", "onComicIdChanged")
+end sub
+
+sub onComicIdChanged()
+    if m.top.comicId <> invalid
+        m.top.control = "RUN"
+    end if
+end sub
+
+sub fetchCharacters()
+    ' Bro make sure to replace the link. I think the one you sent me does not make sense, because I think we have to send some Id for them to send the right response.
+    url = "https://your-api-endpoint.com/comics/" + m.top.comicId + "/characters"
+
+    request = createObject("roUrlTransfer")
+    request.setUrl(url)
+
+    response = request.getToString()
+
+    if response <> invalid
+        m.top.response = parseJson(response)
+    else
+        m.top.response = invalid
+    end if
+end sub

@@ -1,0 +1,7 @@
+<component name="MainScene" extends="Scene">
+    <script type="text/brightscript" uri="MainScene.bs" />
+    <children>
+        <Label id="ShowError" translation="[96, 54]" visible="false" />
+        <RowList id="fakeGrid" translation="[96, 54]" />
+    </children>
+</component>

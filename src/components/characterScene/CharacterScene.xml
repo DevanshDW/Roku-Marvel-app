@@ -1,0 +1,8 @@
+<component name="CharacterScene" extends="Scene">
+    <script type="text/brightscript" uri="pkg:/components/characterScene/CharacterScene.bs" />
+
+    <children>
+        <RowList id="characterList" />
+        <Video id="videoPlayer" />
+    </children>
+</component>

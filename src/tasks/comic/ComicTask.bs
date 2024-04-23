@@ -1,0 +1,25 @@
+sub init()
+    m.top.functionName = "fetchComics"
+end sub
+
+sub fetchComics()
+    url = "http://gateway.marvel.com/v1/public/comics?ts=1&apikey=79273719f35210199cf088a6b85463ad47e0c36d&hash=484cb056d7fdc9ad3689c7e5a31cc3aa"
+    http = createObject("roUrlTransfer")
+    http.setUrl(url)
+    port = createObject("roMessagePort")
+    http.setPort(port)
+    http.AsyncGetToString()
+    while true
+        msg = wait(0, port)
+        if type(msg) = "roUrlEvent"
+            if msg.getInt() = 1
+                if msg.getResponseCode() = 200
+                    m.top.response = parseJson(msg.getString())
+                else
+                    m.top.response = invalid
+                end if
+                exit while
+            end if
+        end if
+    end while
+end sub

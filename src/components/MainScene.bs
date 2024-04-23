@@ -1,0 +1,68 @@
+sub init()
+    ' This is required to pass certification.
+    ' Specified in section 3.2 of the Roku Certification Criteria.
+    ' Reference: https://developer.roku.com/docs/developer-program/certification/certification.md#3-performance
+    m.top.signalBeacon("AppLaunchComplete")
+
+    ' Add the background image of your choice to the /images folder
+    m.top.backgroundURI = "pkg:/images/background.png"
+
+    m.fakeGrid = m.top.findNode("fakeGrid")
+    m.fakeGrid.content = createObject("roSGNode", "ContentNode")
+    m.fakeGrid.numColumns = 3
+    m.fakeGrid.setFocus(true)
+
+    m.errorText = m.top.findNode("ShowError")
+
+    ' Observe the focused item to handle comic selection
+    m.fakeGrid.observeField("itemFocused", "onComicSelected")
+
+    m.comicTask = createObject("roSGNode", "ComicTask")
+    m.comicTask.observeField("response", "onComicsFetched")
+    m.comicTask.control = "RUN"
+end sub
+
+sub onComicsFetched()
+    ' Unobserve the task. This will help avoid leaks.
+    m.comicTask.unobserveField("response")
+
+    if m.comicTask.response = invalid or m.comicTask.response.data.results.count() = 0
+        m.errorText.visible = true
+        m.errorText.text = "Failed to fetch comics or no comics were returned"
+    else
+        comics = m.comicTask.response.data.results
+        numColumns = m.fakeGrid.numColumns
+
+        ' Calculate the number of rows
+        numRows = (comics.count() + numColumns - 1) / numColumns
+
+        ' Set the number of rows in the grid
+        m.fakeGrid.numRows = numRows
+
+        for row = 0 to numRows - 1
+            for column = 0 to numColumns - 1
+                index = row * numColumns + column
+                if index < comics.count()
+                    comic = comics[index]
+                    comicNode = m.fakeGrid.content.getChild(index)
+
+                    ' Node for this comic doesn't exist yet. This is good for performance.
+                    if comicNode = invalid
+                        comicNode = createObject("roSGNode", "ContentNode")
+                        comicNode.title = comic.title
+                        comicNode.HDPosterUrl = comic.thumbnail.path + "." + comic.thumbnail.extension
+                        m.fakeGrid.content.appendChild(comicNode)
+                    end if
+                end if
+            end for
+        end for
+    end if
+end sub
+
+sub onComicSelected()
+    comicNode = m.fakeGrid.content.getChild(m.fakeGrid.itemFocused)
+    comicId = comicNode.comic.id
+
+    ' Navigate to the CharacterScene
+    m.top.pushScene({ id: "CharacterScene", comicId: comicId })
+end sub
