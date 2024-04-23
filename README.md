@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to Bunny
 
 > This project was created using [`npx create-roku-app`](https://github.com/haystacknews/create-roku-app)
@@ -31,3 +32,6 @@
 - `format`: Formats your source files with [`brighterscript-formatter`](https://github.com/rokucommunity/brighterscript-formatter)
 
 - `format:fix`: Formats your source files and applies automatic fixes.
+=======
+# Roku-Marvel-app
+>>>>>>> 9430690e397f370e11fa213a9a32f729bf69706f
